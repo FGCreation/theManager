@@ -1,5 +1,3 @@
-import grp
-from tokenize import group
 import mysql
 import mysql.connector
 from . import creds
@@ -106,6 +104,20 @@ def cFieldData():
     cFields = cursor2.fetchall()
     db2.commit()
     return cFields
+def adtFieldData():
+    db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
+    cursor2 = db2.cursor(buffered=True)
+    q = f"DESCRIBE auditListField;"
+    cursor2.execute(q)
+    tffields = cursor2.fetchall()
+    ffields = []
+    for i in tffields:
+        ffields.append(i[0])
+    q = f"SELECT * FROM auditListField;"
+    cursor2.execute(q)
+    cFields = cursor2.fetchall()
+    db2.commit()
+    return cFields
 def insertField(usr,fname,dName,fType,fOpt,Icon):
     db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
     cursor2 = db2.cursor(buffered=True)
@@ -113,19 +125,51 @@ def insertField(usr,fname,dName,fType,fOpt,Icon):
         q = f"INSERT INTO clientListField(fieldName, displayName, fieldType, fieldOpt) VALUES ('{fname}','{dName}','{fType}','{fOpt}')"
     else:
         q = f"INSERT INTO clientListField(fieldName, displayName, fieldType, fieldOpt, mdiIcon) VALUES ('{fname}','{dName}','{fType}','{fOpt}','{Icon}')"
-    log(usr,f'{usr} inserted field "{dName}" in colum database - ("{fname}","{dName}","{fType}","{fOpt}","{Icon}")')
+    log(usr,f'{usr} inserted field "{dName}" in Client colum database - ("{fname}","{dName}","{fType}","{fOpt}","{Icon}")')
     cursor2.execute(q)
     q = f"ALTER TABLE `clientList` ADD `{fname}` VARCHAR(255) NULL DEFAULT NULL"
+    cursor2.execute(q)
+    db2.commit()
+    return q
+def insertAdtField(usr,fname,dName,fType,fOpt,Icon):
+    db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
+    cursor2 = db2.cursor(buffered=True)
+    if Icon != '':
+        q = f"INSERT INTO auditListField(fieldName, displayName, fieldType, fieldOpt) VALUES ('{fname}','{dName}','{fType}','{fOpt}')"
+    else:
+        q = f"INSERT INTO auditListField(fieldName, displayName, fieldType, fieldOpt, mdiIcon) VALUES ('{fname}','{dName}','{fType}','{fOpt}','{Icon}')"
+    log(usr,f'{usr} inserted field "{dName}" in Audit colum database - ("{fname}","{dName}","{fType}","{fOpt}","{Icon}")')
+    cursor2.execute(q)
+    q = f"ALTER TABLE `audit` ADD `{fname}` VARCHAR(255) NULL DEFAULT NULL"
     cursor2.execute(q)
     db2.commit()
     return q
 def dltCClm(cid,usr):
     db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
     cursor2 = db2.cursor(buffered=True)
+    q = f"SELECT fieldName FROM clientListField WHERE id='{cid}'"
+    cursor2.execute(q)
+    cname = cursor2.fetchall()
     q = f"DELETE FROM clientListField WHERE id='{cid}'"
     cursor2.execute(q)
+    q=f"ALTER TABLE clientList DROP COLUMN {cname[0][0]}"
+    print ([q,'>>>>>>>>>>>>>>>>>>>>'])
+    cursor2.execute(q) 
     db2.commit()
-    return q
+    return [cname,'>>>>>>>>>>>>>>>>>>>>']
+def dltAdtClm(cid,usr):
+    db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
+    cursor2 = db2.cursor(buffered=True)
+    q = f"SELECT fieldName FROM auditListField WHERE id='{cid}'"
+    cursor2.execute(q)
+    cname = cursor2.fetchall()
+    q = f"DELETE FROM auditListField WHERE id='{cid}'"
+    cursor2.execute(q)
+    q=f"ALTER TABLE audit DROP COLUMN {cname[0][0]}"
+    print ([q,'>>>>>>>>>>>>>>>>>>>>'])
+    cursor2.execute(q) 
+    db2.commit()
+    return [cname,'>>>>>>>>>>>>>>>>>>>>']
 def updtCdt(usr,q2,uData):
     db2 = mysql.connector.connect(host=creds.host, user=creds.user, passwd=creds.passwd,database=creds.database)
     cursor2 = db2.cursor(buffered=True)

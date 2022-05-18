@@ -10,7 +10,7 @@
             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
             <!-- Dark Logo icon -->
             <img
-              src="../assets/images/logo-icon.png"
+              src="/assets/images/logo-icon.png"
               alt="homepage"
               class="light-logo"
               width="25"
@@ -21,7 +21,7 @@
           <span class="logo-text ms-2">
             <!-- dark Logo text -->
             <img
-              src="../assets/images/logo-text.png"
+              src="/assets/images/logo-text.png"
               alt="homepage"
               class="light-logo"
             />
@@ -30,7 +30,7 @@
           <!-- <b class="logo-icon"> -->
           <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
           <!-- Dark Logo icon -->
-          <!-- <img src="../assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
+          <!-- <img src="/assets/images/logo-text.png" alt="homepage" class="light-logo" /> -->
 
           <!-- </b> -->
           <!--End Logo icon -->
@@ -282,7 +282,7 @@
               aria-expanded="false"
             >
               <img
-                src="../assets/images/users/1.jpg"
+                src="/assets/images/users/1.jpg"
                 alt="user"
                 class="rounded-circle"
                 width="31"
@@ -358,6 +358,7 @@
                   ><span class="hide-menu">{{i[0]}}</span></a
                 >
               </li>
+              
               {%endfor%}
             </ul>
           </li>
@@ -374,6 +375,12 @@
                 <a href="/clients-db-management/" class="sidebar-link"
                   ><i class="mdi mdi-account"></i
                   ><span class="hide-menu">Clients</span></a
+                >
+              </li>
+              <li class="sidebar-item">
+                <a href="/audit-db-management/" class="sidebar-link"
+                  ><i class="mdi mdi-history"></i
+                  ><span class="hide-menu">Audit</span></a
                 >
               </li>
             </ul>
@@ -628,4 +635,4 @@
     </div>
     <!-- End Sidebar scroll-->
   </aside>
-  <script src="../dist/js/masterDataMng.js"></script>
+  <script src="/dist/js/masterDataMng.js"></script>

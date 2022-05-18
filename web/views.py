@@ -20,7 +20,7 @@ def clients(path):
         cI=mysqlDB.client_in(path)
         cIC= mysqlDB.client_info_collums()
         yrs = mysqlDB.years()
-        return render_template("clients.html",client_collum_info=cIC,client_info=cI,client_info_length=len(cI[0]),years=yrs)
+        return render_template("clients.html",c_yr=path,client_collum_info=cIC,client_info=cI,client_info_length=len(cI[0]),years=yrs)
     else:
         return redirect("/login",code=302)
 
@@ -110,7 +110,6 @@ def dlt(cid):
         except:
             usr = session['regularuser']
         gg = mysqlDB.dltCClm(cid,usr)
-        return redirect("/clients-db-management/",code=302)
     return redirect("/clients-db-management/",code=302)
 
 @routes.route('/clients-db-management/',methods=['GET','POST'])
@@ -184,3 +183,40 @@ def artclsEdit(type,aid=''):
         return redirect("/articles/",code=302)
     else:
         return redirect("/login",code=302)
+@routes.route('/clients/<yr>/<cid>')
+def abtCl(cid,yr):
+    if "masteruser" in session or "regularuser" in session:
+        cdt = mysqlDB.cdataForDynamic(cid)
+        yrs = mysqlDB.years()
+        return render_template('abtClient.html',years=yrs,cdt=cdt,c_yr=yr)
+    else:
+        return redirect("/login",code=302)
+@routes.route('/clients/<yr>/<cid>/<work>')
+def mngWork(cid,yr,work):
+    if "masteruser" in session or "regularuser" in session:
+        yrs = mysqlDB.years()
+        return render_template('abtClient.html',years=yrs,cdt=cdt,c_yr=yr)
+    else:
+        return redirect("/login",code=302)
+@routes.route('/audit-db-management/',methods=['GET','POST'])
+def adtClientDb():
+    if 'masteruser' in session:
+        if request.method == 'GET':
+            yrs = mysqlDB.years()
+            return render_template('auditDb.html',years=yrs,fieldData=mysqlDB.adtFieldData())
+        if request.method == 'POST':
+            try:
+                usr = session['regularuser']
+            except:
+                usr = session['masteruser']
+            mysqlDB.insertAdtField(usr,request.form['fName'],request.form['dName'],request.form['fType'],request.form['opts'],request.form['icon'])
+            return redirect("/audit-db-management/",code=302)
+@routes.route('/audit-db-management/delete/<cid>/',methods=['GET','POST'])
+def audtDb(cid):
+    if 'masteruser' in session:
+        try:
+            usr = session['masteruser']
+        except:
+            usr = session['regularuser']
+        gg = mysqlDB.dltAdtClm(cid,usr)
+    return redirect("/audit-db-management/",code=302)
